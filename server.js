@@ -9,9 +9,7 @@ const { JWT } = require("google-auth-library");
 
 const app = express();
 const port = process.env.PORT || 5000;
-
 // const sheets = google.sheets({ version: "v4", auth: config.apiKey });  
-
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
@@ -25,26 +23,48 @@ const serviceAccountAuth = new JWT({
 // console.log(serviceAccountAuth);
 
 const doc = new GoogleSpreadsheet(
-  "1RN32yHsBpdMmXD6P3cCT09oq-d1VsBVgCYBDlt38KFI",
+  process.env.GOOGLE_SHEET_ID,
   serviceAccountAuth
 );
 
+async function loadSheet() {
+  await doc.loadInfo(); // Load the spreadsheet
+  const sheet = doc.sheetsByIndex[0]; // Select the first sheet (you can choose any index)
+  await sheet.loadCells();
+  return sheet;
+}
+
+app.post(`/api/sheets/save`,async(req, res)=>{
+  console.log("config-Headers:",config.headers)
+  console.log("saveReq:", req.body)
+})
+
+app.get(`/api/sheets/:id`, async(req, res)=>{
+  console.log("req:",req.params?.id)
+  const id=req.params?.id;
+  try{
+    const sheet=await loadSheet();
+    const rows = await sheet.getRows();
+    const headers = sheet.headerValues;
+    console.log("headers:", headers);
+    const row= rows[id];
+    console.log("row:",rows[id]);
+    const rowData = {};
+    headers.forEach((header, index) => {
+        rowData.id = id;
+        rowData[header] = row._rawData[index] || ""; // Assign empty string if value is undefined
+    });
+    res.json({value:rowData});
+  }
+  catch(err){
+    console.log(err.message);
+    res.status(500).json({ err: err.message });
+  }
+})
 app.get("/api/sheets", async (req, res) => {
   try {
     await doc.loadInfo();
-    // console.log(doc);
     const worksheet = doc.sheetsByIndex[0]; // Here, 1st tab on Google Spreadsheet is used.
-    // const values = [
-    //       { a: "123", b: "456" },
-    //       { a: "321", b: "654" },
-    //     ];
-    //     await worksheet.setHeaderRow(["a", "b"]); // This is the header row.
-    //     await worksheet.addRows(values); // Your value is put to the sheet.
-    // const response = await sheets.spreadsheets.values.get({
-    //   spreadsheetId: config.googleSheetId,
-    //   range: "Sheet1!A1:D10",
-    // });
-    // const jsonData = {};
     await worksheet.loadCells();
     const rows = await worksheet.getRows();
     const headers = worksheet.headerValues;
