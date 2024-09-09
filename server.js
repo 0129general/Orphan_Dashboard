@@ -38,16 +38,33 @@ async function loadSheet() {
   return doc.sheetsByIndex[0]; // Access the first sheet
 }
 
+function convertToJSON(headers, rows) {
+    const jsonData = rows.map((row, rindex) => {
+        const rowData = {};
+        headers.forEach((header, index) => {
+            rowData.id = rindex;
+            rowData[header] = row._rawData[index] || ""; // Assign empty string if value is undefined
+        });
+        return rowData;
+      });
+    return jsonData;
+  }
+
 // API to get all rows
 app.get('/api/rows', async (req, res) => {
   try {
     // await authenticate();
     const sheet = await loadSheet();
+    await sheet.loadCells();
     const rows = await sheet.getRows();
-    res.json(rows.map(row => row._rawData)); // Send raw data to the client
+    const headers = sheet.headerValues;
+    const resJson= convertToJSON(headers,rows);
+    console.log("resJson:",resJson);
+    res.json(resJson)
+    // res.json(rows.map(row => row._rawData)); // Send raw data to the client
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
+  } 
 });
 
 // API to add a new row
