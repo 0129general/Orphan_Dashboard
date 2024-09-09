@@ -2,24 +2,23 @@ const express = require('express');
 const cors = require('cors');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require("google-auth-library");
-// const { config } = require('dotenv');
-// require("dotenv").config();
+const http = require('http');
+const { Server } = require('socket.io');
+const path = require('path');
+
 const config=require('./config');
-// const { config } = require('dotenv');
+
 
 const app = express();
+
+const server = http.createServer(app);
+const io = new Server(server);
+
 app.use(cors());
 app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true }));
 
-// const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
 
-// async function authenticate() {
-//   await doc.useServiceAccountAuth({
-//     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-//     private_key: process.env.GOOGLE_PRIVATE_KEY,
-//   });
-// }
 const serviceAccountAuth = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     key: process.env.GOOGLE_PRIVATE_KEY,
@@ -32,6 +31,8 @@ const serviceAccountAuth = new JWT({
     process.env.GOOGLE_SHEET_ID,
     serviceAccountAuth
   );
+
+
 
 async function loadSheet() {
   await doc.loadInfo();
@@ -50,10 +51,40 @@ function convertToJSON(headers, rows) {
     return jsonData;
   }
 
+  async function fetchSheetData(sheet) {
+    const rows = await sheet.getRows(); // Get all the rows in the sheet
+    return rows.map(row => row._rawData); // Extract raw data from each row
+  }
+  
+  let previousData = [];
+
+async function checkForChanges() {
+  try {
+    const sheet = await loadSheet();
+    const newData = await fetchSheetData(sheet);
+    // Compare the new data with the previous data
+    if (JSON.stringify(previousData) !== JSON.stringify(newData)) {
+      console.log('Google Sheet data has changed');
+      previousData = newData;
+      console.log(newData);
+
+      // Emit new data to all connected clients
+      io.emit('sheetDataChanged', newData);
+    } else {
+      console.log('No changes detected');
+    }
+  } catch (error) {
+    console.error('Error checking for changes:', error);
+  }
+}
+
+// Poll the sheet for changes every 60 seconds
+setInterval(checkForChanges, 5000); // Check for changes every 1 minute
+
+
 // API to get all rows
 app.get('/api/rows', async (req, res) => {
   try {
-    // await authenticate();
     const sheet = await loadSheet();
     await sheet.loadCells();
     const rows = await sheet.getRows();
@@ -115,6 +146,17 @@ app.delete('/api/row/:index', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+io.on('connection', (socket) => {
+    console.log('Client connected');
+  
+    // Optionally, send the initial data to the client when they connect
+    socket.emit('initialData', previousData);
+  
+    socket.on('disconnect', () => {
+      console.log('Client disconnected');
+    });
+  });
 
 // Start the server
 const PORT = process.env.PORT || 5000;
