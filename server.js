@@ -81,9 +81,8 @@ async function checkForChanges() {
 // Poll the sheet for changes every 60 seconds
 setInterval(checkForChanges, 5000); // Check for changes every 1 minute
 
-
 // API to get all rows
-app.get('/api/rows', async (req, res) => {
+app.get('/api/sheets/rows', async (req, res) => {
   try {
     const sheet = await loadSheet();
     await sheet.loadCells();
@@ -99,7 +98,7 @@ app.get('/api/rows', async (req, res) => {
 });
 
 // API to add a new row
-app.post('/api/row', async (req, res) => {
+app.post('/api/sheets/row', async (req, res) => {
   try {
     const newRowData = req.body;
     // await authenticate();
@@ -113,7 +112,7 @@ app.post('/api/row', async (req, res) => {
 });
 
 // API to update a row
-app.put('/api/row/:index', async (req, res) => {
+app.put('/api/sheets/row/:index', async (req, res) => {
   try {
     const rowIndex = req.params.index;
     const updatedData = req.body;
@@ -134,7 +133,7 @@ app.put('/api/row/:index', async (req, res) => {
 });
 
 // API to delete a row
-app.delete('/api/row/:index', async (req, res) => {
+app.delete('/api/sheets/row/:index', async (req, res) => {
   try {
     const rowIndex = req.params.index;
     // await authenticate();
