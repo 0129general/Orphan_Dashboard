@@ -136,59 +136,14 @@ app.put("/api/sheets/row/:id", async (req, res) => {
   try {
     const rowId = req.params.id;
     const updatedData = req.body;
-    let rowIndex = -1;
-    console.log("updateData:", updatedData);
-    // await authenticate();
     const sheet = await loadSheet();
-    // await sheet.loadCells();
-    // newData = await fetchSheetData(sheet);
-    // for (let index = 0; index < newData.length; index++) {
-    //   if (newData[index][0] == rowId) {
-    //     rowIndex = index;
-    //     console.log("rowIndex", rowIndex);
-    //     break;
-    //   }
-    // }
-    // console.log(rowIndex);
     const rows = await sheet.getRows();
-    // for (let index = 0; index < rows.length; index++) {
-    //   if (rows[index]._rawData[0] == rowId) {
-    //     console.log("for cycle");
-    //     rowIndex = index;
-    //     console.log("rowIndex", rowIndex);
-    //     break;
-    //   }
-    // }
     const rowToUpdate = rows.find((row) => row._rawData[0] === rowId);
-    // if (rowIndex >= rows.length || rowIndex < 0) {
-    //   return res.status(404).send("Row not found");
-    // }
-
-    // // Update the row at the given index
-    // const rowToUpdate = rows[rowIndex];
     Object.keys(updatedData).forEach((key) => {
       console.log("headers:", config.headers);
       rowToUpdate._rawData[config.headers[key]] = updatedData[key];
     });
-    // row._rawData = updatedData;
-
     await rowToUpdate.save(); // Save the updated row
-    // const rows = await sheet.getRows();
-    // const rowToUpdate = rows.map((row, index) => {
-    //   console.log("rowMAP:", row);
-    //   // if (row._rawData[0] === rowId) {
-    //   //   console.log("rowToUpdate:", row);
-    //   //   return 1;
-    //   // }
-    // });
-    // const row = rows[rowIndex];
-    // console.log("row:", rowToUpdate);s
-    // Object.keys(updatedData).forEach((key) => {
-    //   console.log("headers:", config.headers);
-    //   rowToUpdate._rawData[config.headers[key]] = updatedData[key];
-    // });
-    // console.log("UpdatedRow:", row);
-    // await rowToUpdate.save();
     res.json({ message: "Row updated successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
