@@ -2,16 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const { JWT } = require("google-auth-library");
-const http = require("http");
-const socketIo = require("socket.io");
-const path = require("path");
+// const http = require("http");
+// const socketIo = require("socket.io");
+// const path = require("path");
 
 const config = require("./config");
 
 const app = express();
 
-const server = http.createServer(app);
-const io = socketIo(server);
+// const server = http.createServer(app);
+// const io = socketIo(server);
 
 app.use(cors());
 app.use(express.json()); // For parsing application/json
@@ -39,7 +39,6 @@ function convertToJSON(headers, rows) {
   const jsonData = rows.map((row, rindex) => {
     const rowData = {};
     headers.forEach((header, index) => {
-      rowData.id = rindex;
       rowData[header] = row._rawData[index] || ""; // Assign empty string if value is undefined
     });
     return rowData;
@@ -60,9 +59,16 @@ async function checkForChanges(res) {
     newData = await fetchSheetData(sheet);
     // Compare the new data with the previous data
     if (JSON.stringify(previousData) !== JSON.stringify(newData)) {
-      console.log("Google Sheet data has changed");
       previousData = newData;
-      res.write(`data: ${JSON.stringify(newData)}\n\n`);
+
+      await sheet.loadCells();
+      const rows = await sheet.getRows();
+      const headers = sheet.headerValues;
+      const resJson = convertToJSON(headers, rows);
+      // console.log("resJson:", resJson);
+
+      console.log("Google Sheet data has changed");
+      res.write(`data: ${JSON.stringify(resJson)}\n\n`);
 
       // console.log("backendRes:",res);
       // Emit new data to all connected clients
@@ -77,8 +83,7 @@ async function checkForChanges(res) {
 
 // Poll the sheet for changes every 60 seconds
 // setInterval(checkForChanges, 5000); // Check for changes every 1 minute
-
-app.get("/events", (req, res) => {
+app.get("/sheets/events", (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -104,7 +109,7 @@ app.get("/api/sheets/rows", async (req, res) => {
     const rows = await sheet.getRows();
     const headers = sheet.headerValues;
     const resJson = convertToJSON(headers, rows);
-    console.log("resJson:", resJson);
+    // console.log("resJson:", resJson);
     res.json(resJson);
     // res.json(rows.map(row => row._rawData)); // Send raw data to the client
   } catch (err) {
@@ -127,20 +132,63 @@ app.post("/api/sheets/row", async (req, res) => {
 });
 
 // API to update a row
-app.put("/api/sheets/row/:index", async (req, res) => {
+app.put("/api/sheets/row/:id", async (req, res) => {
   try {
-    const rowIndex = req.params.index;
+    const rowId = req.params.id;
     const updatedData = req.body;
+    let rowIndex = -1;
+    console.log("updateData:", updatedData);
     // await authenticate();
     const sheet = await loadSheet();
+    // await sheet.loadCells();
+    // newData = await fetchSheetData(sheet);
+    // for (let index = 0; index < newData.length; index++) {
+    //   if (newData[index][0] == rowId) {
+    //     rowIndex = index;
+    //     console.log("rowIndex", rowIndex);
+    //     break;
+    //   }
+    // }
+    // console.log(rowIndex);
     const rows = await sheet.getRows();
-    const row = rows[rowIndex];
+    // for (let index = 0; index < rows.length; index++) {
+    //   if (rows[index]._rawData[0] == rowId) {
+    //     console.log("for cycle");
+    //     rowIndex = index;
+    //     console.log("rowIndex", rowIndex);
+    //     break;
+    //   }
+    // }
+    const rowToUpdate = rows.find((row) => row._rawData[0] === rowId);
+    // if (rowIndex >= rows.length || rowIndex < 0) {
+    //   return res.status(404).send("Row not found");
+    // }
 
+    // // Update the row at the given index
+    // const rowToUpdate = rows[rowIndex];
     Object.keys(updatedData).forEach((key) => {
-      row._rawData[config.headers[key]] = updatedData[key];
+      console.log("headers:", config.headers);
+      rowToUpdate._rawData[config.headers[key]] = updatedData[key];
     });
-    console.log("UpdatedRow:", row);
-    await row.save();
+    // row._rawData = updatedData;
+
+    await rowToUpdate.save(); // Save the updated row
+    // const rows = await sheet.getRows();
+    // const rowToUpdate = rows.map((row, index) => {
+    //   console.log("rowMAP:", row);
+    //   // if (row._rawData[0] === rowId) {
+    //   //   console.log("rowToUpdate:", row);
+    //   //   return 1;
+    //   // }
+    // });
+    // const row = rows[rowIndex];
+    // console.log("row:", rowToUpdate);s
+    // Object.keys(updatedData).forEach((key) => {
+    //   console.log("headers:", config.headers);
+    //   rowToUpdate._rawData[config.headers[key]] = updatedData[key];
+    // });
+    // console.log("UpdatedRow:", row);
+    // await rowToUpdate.save();
     res.json({ message: "Row updated successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -148,12 +196,18 @@ app.put("/api/sheets/row/:index", async (req, res) => {
 });
 
 // API to delete a row
-app.delete("/api/sheets/row/:index", async (req, res) => {
+app.delete("/api/sheets/row/:id", async (req, res) => {
   try {
-    const rowIndex = req.params.index;
+    const rowId = req.params.id;
     // await authenticate();
     const sheet = await loadSheet();
     const rows = await sheet.getRows();
+    let rowIndex = 0;
+    const rowToDelete = rows.find((row) => {
+      if (row._rawData[0] === rowId) rowIndex++;
+    });
+    console.log("rowToDelete:", rowToDelete);
+    console.log("rowIndex:", rowIndex);
     await rows[rowIndex].delete();
     res.json({ message: "Row deleted successfully" });
   } catch (err) {
