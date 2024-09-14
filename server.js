@@ -122,9 +122,25 @@ app.post("/api/sheets/row", async (req, res) => {
   try {
     const newRowData = req.body;
     // await authenticate();
-    console.log(newRowData);
+    // console.log(newRowData);
     const sheet = await loadSheet();
-    await sheet.addRow(newRowData);
+    const rows = await sheet.getRows();
+
+    const headers = sheet.headerValues;
+    // console.log("headers:",headers)
+      // Check if there are existing rows
+      let lastId = 0;
+      const identity=headers[0];
+      if (rows.length > 0) {
+          // Get the last row and extract the current 'identity' from the 'identity' column
+          const lastRow = rows[rows.length - 1];
+          lastId = parseInt(lastRow._rawData[0], 10); // Assuming 'identity' is the header for the identity column
+      }
+
+      // Create the new row data, incrementing the 'identity' by 1
+      const newIdentity = lastId + 1;
+      const newRow = { [identity]: newIdentity, ...newRowData }; 
+    await sheet.addRow(newRow);
     res.status(201).json({ message: "Row added successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -139,6 +155,10 @@ app.put("/api/sheets/row/:id", async (req, res) => {
     const sheet = await loadSheet();
     const rows = await sheet.getRows();
     const rowToUpdate = rows.find((row) => row._rawData[0] === rowId);
+    if (rowToUpdate == undefined) {
+      res.json({ message: "The id not exist" });
+      return;
+    }
     Object.keys(updatedData).forEach((key) => {
       console.log("headers:", config.headers);
       rowToUpdate._rawData[config.headers[key]] = updatedData[key];
@@ -157,13 +177,12 @@ app.delete("/api/sheets/row/:id", async (req, res) => {
     // await authenticate();
     const sheet = await loadSheet();
     const rows = await sheet.getRows();
-    let rowIndex = 0;
-    const rowToDelete = rows.find((row) => {
-      if (row._rawData[0] === rowId) rowIndex++;
-    });
-    console.log("rowToDelete:", rowToDelete);
-    console.log("rowIndex:", rowIndex);
-    await rows[rowIndex].delete();
+    const rowToDelete = rows.find((row) => row._rawData[0] === rowId);
+    if (rowToDelete == undefined) {
+      res.json({ message: "The id not exist" });
+      return;
+    }
+    await rowToDelete.delete(); // Save the updated row
     res.json({ message: "Row deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
