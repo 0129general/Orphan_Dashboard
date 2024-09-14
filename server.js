@@ -2,16 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const { JWT } = require("google-auth-library");
-// const http = require("http");
-// const socketIo = require("socket.io");
-// const path = require("path");
 
 const config = require("./config");
-
 const app = express();
-
-// const server = http.createServer(app);
-// const io = socketIo(server);
 
 app.use(cors());
 app.use(express.json()); // For parsing application/json
@@ -24,7 +17,6 @@ const serviceAccountAuth = new JWT({
 });
 
 // console.log(serviceAccountAuth);
-
 const doc = new GoogleSpreadsheet(
   process.env.GOOGLE_SHEET_ID,
   serviceAccountAuth
@@ -57,22 +49,14 @@ async function checkForChanges(res) {
   try {
     const sheet = await loadSheet();
     newData = await fetchSheetData(sheet);
-    // Compare the new data with the previous data
     if (JSON.stringify(previousData) !== JSON.stringify(newData)) {
       previousData = newData;
-
       await sheet.loadCells();
       const rows = await sheet.getRows();
       const headers = sheet.headerValues;
       const resJson = convertToJSON(headers, rows);
-      // console.log("resJson:", resJson);
-
       console.log("Google Sheet data has changed");
       res.write(`data: ${JSON.stringify(resJson)}\n\n`);
-
-      // console.log("backendRes:",res);
-      // Emit new data to all connected clients
-      // io.emit("sheetDataChanged", newData);
     } else {
       console.log("No changes detected");
     }
@@ -87,25 +71,25 @@ app.get("/sheets/events", (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
-
-  // Send data to the client periodically
-  // checkForChanges();
-  // setInterval(() => {
-  //   if (previousData != newData) {
-  //     previousData = newData;
-  //     res.write(`data: ${JSON.stringify({ message: newData })}\n\n`);
-  //   }
-  // }, 1000); // Check for changes every 1 minute
   setInterval(() => checkForChanges(res), 5000);
-  // setInterval(() => {
-  //   res.write(`data: ${JSON.stringify({ message: "Hello from SSE!" })}\n\n`);
-  // }, 1000);
 });
+// API to get headers
+app.get("/api/sheets/headers", async (req, res) => {
+  try {
+    const sheet = await loadSheet();
+    await sheet.loadHeaderRow(); // Load the header row (typically the first row)
+    const headers = sheet.headerValues; // Get the column names
+    res.status(200).json(headers); // Send the headers as JSON
+  } catch (error) {
+    res.status(500).send("Error retrieving headers");
+  }
+});
+
 // API to get all rows
 app.get("/api/sheets/rows", async (req, res) => {
   try {
     const sheet = await loadSheet();
-    await sheet.loadCells();
+    // await sheet.loadCells();
     const rows = await sheet.getRows();
     const headers = sheet.headerValues;
     const resJson = convertToJSON(headers, rows);
@@ -188,17 +172,6 @@ app.delete("/api/sheets/row/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-// io.on("connection", (socket) => {
-//   console.log("Client connected");
-
-//   // Optionally, send the initial data to the client when they connect
-//   socket.emit("initialData", previousData);
-
-//   socket.on("disconnect", () => {
-//     console.log("Client disconnected");
-//   });
-// });
 
 // Start the server
 const PORT = process.env.PORT || 5000;
