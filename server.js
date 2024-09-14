@@ -128,18 +128,18 @@ app.post("/api/sheets/row", async (req, res) => {
 
     const headers = sheet.headerValues;
     // console.log("headers:",headers)
-      // Check if there are existing rows
-      let lastId = 0;
-      const identity=headers[0];
-      if (rows.length > 0) {
-          // Get the last row and extract the current 'identity' from the 'identity' column
-          const lastRow = rows[rows.length - 1];
-          lastId = parseInt(lastRow._rawData[0], 10); // Assuming 'identity' is the header for the identity column
-      }
+    // Check if there are existing rows
+    let lastId = 0;
+    const identity = headers[0];
+    if (rows.length > 0) {
+      // Get the last row and extract the current 'identity' from the 'identity' column
+      const lastRow = rows[rows.length - 1];
+      lastId = parseInt(lastRow._rawData[0], 10); // Assuming 'identity' is the header for the identity column
+    }
 
-      // Create the new row data, incrementing the 'identity' by 1
-      const newIdentity = lastId + 1;
-      const newRow = { [identity]: newIdentity, ...newRowData }; 
+    // Create the new row data, incrementing the 'identity' by 1
+    const newIdentity = lastId + 1;
+    const newRow = { [identity]: newIdentity, ...newRowData };
     await sheet.addRow(newRow);
     res.status(201).json({ message: "Row added successfully" });
   } catch (err) {
