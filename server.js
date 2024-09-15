@@ -67,7 +67,7 @@ async function checkForChanges(res) {
 
 // Poll the sheet for changes every 60 seconds
 // setInterval(checkForChanges, 5000); // Check for changes every 1 minute
-app.get("/sheets/events", (req, res) => {
+app.get("/api/sheets/events", (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -79,7 +79,7 @@ app.get("/api/sheets/headers", async (req, res) => {
     const sheet = await loadSheet();
     await sheet.loadHeaderRow(); // Load the header row (typically the first row)
     const headers = sheet.headerValues; // Get the column names
-    res.status(200).json(headers); // Send the headers as JSON
+    res.status(200).json({ res: headers }); // Send the headers as JSON
   } catch (error) {
     res.status(500).send("Error retrieving headers");
   }
@@ -94,7 +94,7 @@ app.get("/api/sheets/rows", async (req, res) => {
     const headers = sheet.headerValues;
     const resJson = convertToJSON(headers, rows);
     // console.log("resJson:", resJson);
-    res.json(resJson);
+    res.json({ res: resJson });
     // res.json(rows.map(row => row._rawData)); // Send raw data to the client
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -125,7 +125,7 @@ app.post("/api/sheets/row", async (req, res) => {
     const newIdentity = lastId + 1;
     const newRow = { [identity]: newIdentity, ...newRowData };
     await sheet.addRow(newRow);
-    res.status(201).json({ message: "Row added successfully" });
+    res.status(201).json({ message: "Row added successfully", res: newRow });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -136,6 +136,7 @@ app.put("/api/sheets/row/:id", async (req, res) => {
   try {
     const rowId = req.params.id;
     const updatedData = req.body;
+    console.log("updatedData:", updatedData);
     const sheet = await loadSheet();
     const rows = await sheet.getRows();
     const rowToUpdate = rows.find((row) => row._rawData[0] === rowId);
@@ -148,7 +149,7 @@ app.put("/api/sheets/row/:id", async (req, res) => {
       rowToUpdate._rawData[config.headers[key]] = updatedData[key];
     });
     await rowToUpdate.save(); // Save the updated row
-    res.json({ message: "Row updated successfully" });
+    res.json({ message: "Row updated successfully", res: updatedData });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -167,7 +168,7 @@ app.delete("/api/sheets/row/:id", async (req, res) => {
       return;
     }
     await rowToDelete.delete(); // Save the updated row
-    res.json({ message: "Row deleted successfully" });
+    res.json({ message: "Row deleted successfully", res: rowId });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
