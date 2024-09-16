@@ -6,7 +6,8 @@ const usersFile = path.join(__dirname, "../users.json");
 
 // Login
 exports.login = (req, res) => {
-  const { email, password,role } = req.body;
+  const { email, password } = req.body;
+  console.log("body:",req.body)
 
   fs.readFile(usersFile, "utf-8", (err, data) => {
     if (err) return res.status(500).json({ message: "Error reading users" });
@@ -20,7 +21,7 @@ exports.login = (req, res) => {
       return res.status(401).json({ message: "Invalid password" });
 
     const token = jwt.sign(
-      { id: user.id, role: role },
+      { id: user.id, role: user.role },
       process.env.JWT_SECRET,
       {
         expiresIn: 86400,
@@ -32,7 +33,7 @@ exports.login = (req, res) => {
 
 // Register
 exports.register = (req, res) => {
-  const { email, password } = req.body;
+  const { email, password,role } = req.body;
   console.log("body:", email, password);
   fs.readFile(usersFile, "utf-8", (err, data) => {
     if (err) return res.status(500).json({ message: "Error reading users" });
@@ -49,14 +50,14 @@ exports.register = (req, res) => {
       id: (users && users[users?.length - 1]?.id) || 0 + 1,
       email,
       password: hashedPassword,
-      role: "admin",
+      role: role,
     };
 
     users.push(newUser);
     fs.writeFile(usersFile, JSON.stringify(users, null, 2), (err) => {
       if (err) return res.status(500).json({ message: "Error saving user" });
       const token = jwt.sign(
-        { id: newUser.id, role: "admin" },
+        { id: newUser.id, role: role },
         process.env.JWT_SECRET,
         {
           expiresIn: 86400,
