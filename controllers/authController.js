@@ -46,6 +46,7 @@ exports.register = (req, res) => {
         .json({ message: "The user is already registered" });
 
     const hashedPassword = bcrypt.hashSync(password, 8);
+    console.log("id=",(users && users[users?.length - 1]?.id) )
     const newUser = {
       id: (users && users[users?.length - 1]?.id) || 0 + 1,
       email,

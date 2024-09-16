@@ -4,5 +4,24 @@
     "email": "adminsalem@gmail.com",
     "password": "$2b$08$JkoivYTnzJy2xxE3ip9BWuaeMKUMTIqcHgXxRPKSSJgMw1OoIDzbi",
     "role": "admin"
-  }
+  },
+  {
+    "id": 1,
+    "email": "supervisor@gmail.com",
+    "password": "$2b$08$LnEnpKxLEwHjwIg7VNiSqO1IWqL6ifVEFnu8fqSNHJtkfU50ZHhX2",
+    "role": "supervisor"
+  },
+  {
+    "id": 1,
+    "email": "user@gmail.com",
+    "password": "$2b$08$bceDaqhZZljwSR242.oLnOi.nwvvSEyr5IkVBaKKva0uUR3dbjkgW",
+    "role": "viewer"
+  },
+  {
+    "id": 1,
+    "email": "admin1@gmail.com",
+    "password": "$2b$08$Wg3LPWkTiu/nYnZjIQpEuuM7Byaxb8vcnrqcAulY1rIDfvvNk2glO",
+    "role": "admin"
+  },
+  {}
 ]
