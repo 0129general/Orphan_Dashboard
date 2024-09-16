@@ -12,57 +12,9 @@
     "role": "supervisor"
   },
   {
-    "id": 3,
-    "email": "user15@gamil.com",
-    "password": "$2b$08$w7OHpaaWLp11sAo2XiZYBekkegH97Uco6ibUa/hvRmeAYqE/AL7aW",
-    "role": "viewer"
-  },
-  {
-    "id": 4,
-    "email": "admin1@gmail.com",
-    "password": "$2b$08$Wg3LPWkTiu/nYnZjIQpEuuM7Byaxb8vcnrqcAulY1rIDfvvNk2glO",
-    "role": "admin"
-  },
-  {
-    "id": 5,
-    "email": "admin2@gmail.com",
-    "password": "$2b$08$gm3spJld5Ggu14WnuBudGeMKiHbhTGzaTZRnOMrtQGTlEmKNhgw0i",
-    "role": "admin"
-  },
-  {
-    "id": 7,
-    "email": "admin3@gmail.com",
-    "password": "$2b$08$Grat0kscSv1.0fUVgAa1lOhV2fcv3iat1U2OmU0IfUuY2H..SojAe",
-    "role": "admin"
-  },
-  {
-    "id": 8,
-    "email": "admin4@gmail.com",
-    "password": "$2b$08$WVW8r9cP4rZsWXyWGujxxeVAOri/n2Qoe/OEKVy.aB9osX/i.LYEC",
-    "role": "admin"
-  },
-  {
-    "id": 10,
-    "email": "admin6@gmail.com",
-    "password": "$2b$08$xXhSbF1Di3D.CXnrWy9N1OBqiakNxKXgXkupFIkkvYmCIh.E5mtx2",
-    "role": "admin"
-  },
-  {
-    "id": 11,
-    "email": "admin7@gmail.com",
-    "password": "$2b$08$G4kK1q8Zdr/oW0A5elds2eAuS/ZAS1ZyqLTEO5qq1KCRq4XerCH0W",
-    "role": "admin"
-  },
-  {
-    "id": 12,
-    "email": "user12@gamil.com",
-    "password": "$2b$08$rDVNUabDJTwxrcRqQHtsIO7S5Rp3aN14JMHAUVgpPpqO.NwHswU3u",
-    "role": "viewer"
-  },
-  {
-    "id": 13,
-    "email": "user14@gamil.com",
-    "password": "$2b$08$COBqoDfthkjmdHuNIaiiZedxXVh3rI8gGPxGk7wMadCY7XfdnPAW2",
+    "id": "3",
+    "email": "userquew@gmail.com",
+    "password": "$2b$08$vXAKDXV9aqlDo4ow26KP2OvdpTooXJaKRHXymhbTnqhFuyyqcQqFe",
     "role": "viewer"
   }
 ]

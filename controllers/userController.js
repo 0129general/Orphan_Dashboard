@@ -61,7 +61,8 @@ exports.addUser = (req, res) => {
 exports.updateUser = (req, res) => {
   const userId = req.params.id;
   const updatedData = req.body;
-  console.log("userId:", userId);
+
+  console.log("userId:", userId, updatedData);
   fs.readFile(usersFile, "utf-8", (err, data) => {
     if (err) return res.status(500).json({ message: "Error reading users" });
     let users = JSON.parse(data);
