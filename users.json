@@ -16,5 +16,29 @@
     "email": "userquew@gmail.com",
     "password": "$2b$08$vXAKDXV9aqlDo4ow26KP2OvdpTooXJaKRHXymhbTnqhFuyyqcQqFe",
     "role": "viewer"
+  },
+  {
+    "id": 4,
+    "email": "user1@gmail.com",
+    "password": "$2b$08$ItCXz3SjSJBfewN1ypID3u93pWt90WN81KXZfExG9/PW40iuJJBVu",
+    "role": "viewer"
+  },
+  {
+    "id": 5,
+    "email": "supervisor2@gmail.com",
+    "password": "$2b$08$rGTx2zMwtMKdL4cnSdKkju35zUCuubd7byHsG7ovf75f1IH9Jn1RG",
+    "role": "supervisor"
+  },
+  {
+    "id": 6,
+    "email": "adminyan@gmail.com",
+    "password": "$2b$08$8GWO9sjan2tSjc2Pwk8Ty.sU8PAZ/kfdBDnSEUFYcoV3CsDiCvVBu",
+    "role": "admin"
+  },
+  {
+    "id": "7",
+    "email": "supervisor4@gmail.com",
+    "password": "$2b$08$xC168HU4z2GE5Yn8OqLoiuIcnCUckb7y13kVgv7hhlu4yiYt6NTw.",
+    "role": "supervisor"
   }
 ]

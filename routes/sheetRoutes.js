@@ -4,7 +4,7 @@ const sheetController = require("../controllers/sheetController");
 
 const router = express.Router();
 
-router.get("/events", sheetController.sheetEvents);
+// router.get("/events", sheetController.sheetEvents);
 router.get("/headers", sheetController.getHeaders);
 router.get("/rows", sheetController.getRows);
 router.post("/row", sheetController.addRow);

@@ -30,7 +30,7 @@ exports.addUser = (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, 8);
     let userId = 0;
     if (users) {
-      userId = users[users?.length - 1].id + 1;
+      userId = 1 + Number(users[users?.length - 1].id);
     }
     const newUser = {
       id: userId,

@@ -45,7 +45,7 @@ exports.addRow = async (req, res) => {
     const headers = sheet.headerValues;
 
     let lastId =
-      rows.length > 0 ? parseInt(rows[rows.length - 1]._rawData[0], 10) : 0;
+      rows.length > 0 ? parseInt(rows[rows.length -2]._rawData[0], 10) : 0;
     const newIdentity = lastId + 1;
     const newRow = { [headers[0]]: newIdentity, ...newRowData };
 
@@ -83,8 +83,7 @@ exports.deleteRow = async (req, res) => {
     const rowId = req.params.id;
     const sheet = await loadSheet();
     const rows = await sheet.getRows();
-    const rowToDelete = rows.find((row) => row._rawData[0] === rowId);
-
+    const rowToDelete = rows.find((row) => row._rawData[0] == rowId);
     if (!rowToDelete) {
       return res.status(404).json({ message: "The ID does not exist" });
     }
