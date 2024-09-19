@@ -40,5 +40,17 @@
     "email": "supervisor4@gmail.com",
     "password": "$2b$08$xC168HU4z2GE5Yn8OqLoiuIcnCUckb7y13kVgv7hhlu4yiYt6NTw.",
     "role": "supervisor"
+  },
+  {
+    "id": 8,
+    "email": "user5@gmail.com",
+    "password": "$2b$08$9gohDEyA6dKJZb4F4vUR6eSjBQrxM9vrcwwFJUOGvYLvjUUcMD27a",
+    "role": "viewer"
+  },
+  {
+    "id": 9,
+    "email": "supervisor16@gmail.com",
+    "password": "$2b$08$Vit1GCuCyR1nlHv/aphk.OBEmMfRUsIBh2w/2rhvASgrzXuvNBvuG",
+    "role": "supervisor"
   }
 ]
