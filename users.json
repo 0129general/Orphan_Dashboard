@@ -1,12 +1,12 @@
 [
   {
-    "id": 1,
+    "id": "1",
     "email": "adminsalem@gmail.com",
     "password": "$2b$08$JkoivYTnzJy2xxE3ip9BWuaeMKUMTIqcHgXxRPKSSJgMw1OoIDzbi",
     "role": "admin"
   },
   {
-    "id": 2,
+    "id": "2",
     "email": "supervisor@gmail.com",
     "password": "$2b$08$LnEnpKxLEwHjwIg7VNiSqO1IWqL6ifVEFnu8fqSNHJtkfU50ZHhX2",
     "role": "supervisor"
@@ -18,19 +18,13 @@
     "role": "viewer"
   },
   {
-    "id": 4,
+    "id": "4",
     "email": "user1@gmail.com",
     "password": "$2b$08$ItCXz3SjSJBfewN1ypID3u93pWt90WN81KXZfExG9/PW40iuJJBVu",
     "role": "viewer"
   },
   {
-    "id": 5,
-    "email": "supervisor2@gmail.com",
-    "password": "$2b$08$rGTx2zMwtMKdL4cnSdKkju35zUCuubd7byHsG7ovf75f1IH9Jn1RG",
-    "role": "supervisor"
-  },
-  {
-    "id": 6,
+    "id": "6",
     "email": "adminyan@gmail.com",
     "password": "$2b$08$8GWO9sjan2tSjc2Pwk8Ty.sU8PAZ/kfdBDnSEUFYcoV3CsDiCvVBu",
     "role": "admin"
@@ -42,33 +36,45 @@
     "role": "supervisor"
   },
   {
-    "id": 8,
+    "id": "8",
     "email": "user5@gmail.com",
     "password": "$2b$08$9gohDEyA6dKJZb4F4vUR6eSjBQrxM9vrcwwFJUOGvYLvjUUcMD27a",
     "role": "viewer"
   },
   {
-    "id": 9,
-    "email": "supervisor16@gmail.com",
-    "password": "$2b$08$Vit1GCuCyR1nlHv/aphk.OBEmMfRUsIBh2w/2rhvASgrzXuvNBvuG",
-    "role": "supervisor"
-  },
-  {
-    "id": 10,
+    "id": "10",
     "email": "salem.alotb@gmail.com",
     "password": "$2b$08$9vb0yuaT7J8t0CSCtP3fbuxs1fXfqKtGmWrTiQsoMstL0.aYsgQrS",
     "role": "supervisor"
   },
   {
-    "id": 11,
-    "email": "adminjack@gmail.com",
-    "password": "$2b$08$/MKBvOVxpU8pdONDu.eqBeyo66Xx7vG5iUechcAH33J5lNGWwFW7e",
-    "role": "admin"
+    "id": "11",
+    "email": "userghost1@gmail.com",
+    "password": "$2b$08$dC768ibK.saJ.naiQsT9hOLyzJG9FETJfZXWfbJB7uQtH8tMqEtiO",
+    "role": "viewer"
   },
   {
-    "id": 12,
-    "email": "user112q@gmail.com",
-    "password": "$2b$08$RLl/uROVWTlb9xZTG4PSH.B507T7ttsSbdyORcWkm1y6vNHNEkCR2",
+    "id": "13",
+    "email": "userqnj3@gmail.com",
+    "password": "$2b$08$1Br6ig56tTUxn4VqPN453.10SQhhRZiozDOEJpSnjQVI2J.FnZ43q",
     "role": "viewer"
+  },
+  {
+    "id": "15",
+    "email": "userwio@gmail.com",
+    "password": "$2b$08$RSPlYQ4zYXoFngBf1m5LLuGd2mSW5NjdbatJLOri6wUTusbReV1J6",
+    "role": "viewer"
+  },
+  {
+    "id": "17",
+    "email": "supervisor2qiwj@gmail.com",
+    "password": "$2b$08$33laCEeJLPVkNXPEI1Jbu.vpTryTiR/tzvLvCIhtGTkpl6/zJdq5K",
+    "role": "supervisor"
+  },
+  {
+    "id": "18",
+    "email": "supervisor97823jkl@gmail.com",
+    "password": "$2b$08$3QJEber/DQE6UBBLjO09De/Lg0MT.ro13KcJ.HgvTCOy.4.3knAc2",
+    "role": "supervisor"
   }
 ]
