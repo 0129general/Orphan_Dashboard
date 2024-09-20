@@ -52,5 +52,23 @@
     "email": "supervisor16@gmail.com",
     "password": "$2b$08$Vit1GCuCyR1nlHv/aphk.OBEmMfRUsIBh2w/2rhvASgrzXuvNBvuG",
     "role": "supervisor"
+  },
+  {
+    "id": 10,
+    "email": "salem.alotb@gmail.com",
+    "password": "$2b$08$9vb0yuaT7J8t0CSCtP3fbuxs1fXfqKtGmWrTiQsoMstL0.aYsgQrS",
+    "role": "supervisor"
+  },
+  {
+    "id": 11,
+    "email": "adminjack@gmail.com",
+    "password": "$2b$08$/MKBvOVxpU8pdONDu.eqBeyo66Xx7vG5iUechcAH33J5lNGWwFW7e",
+    "role": "admin"
+  },
+  {
+    "id": 12,
+    "email": "user112q@gmail.com",
+    "password": "$2b$08$RLl/uROVWTlb9xZTG4PSH.B507T7ttsSbdyORcWkm1y6vNHNEkCR2",
+    "role": "viewer"
   }
 ]
