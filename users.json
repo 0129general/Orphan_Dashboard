@@ -24,12 +24,6 @@
     "role": "viewer"
   },
   {
-    "id": "6",
-    "email": "adminyan@gmail.com",
-    "password": "$2b$08$8GWO9sjan2tSjc2Pwk8Ty.sU8PAZ/kfdBDnSEUFYcoV3CsDiCvVBu",
-    "role": "admin"
-  },
-  {
     "id": "7",
     "email": "supervisor4@gmail.com",
     "password": "$2b$08$xC168HU4z2GE5Yn8OqLoiuIcnCUckb7y13kVgv7hhlu4yiYt6NTw.",
@@ -61,20 +55,62 @@
   },
   {
     "id": "15",
-    "email": "userwio@gmail.com",
-    "password": "$2b$08$RSPlYQ4zYXoFngBf1m5LLuGd2mSW5NjdbatJLOri6wUTusbReV1J6",
+    "email": "user222io@gmail.com",
+    "password": "$2b$08$ja0vpcvmJZw0o4EX2n4xeOTcB2M1DboIHDl6ZZ8Y3VlTxJ3amw1A.",
     "role": "viewer"
   },
   {
-    "id": "17",
-    "email": "supervisor2qiwj@gmail.com",
-    "password": "$2b$08$33laCEeJLPVkNXPEI1Jbu.vpTryTiR/tzvLvCIhtGTkpl6/zJdq5K",
+    "id": "18",
+    "email": "supervisorkk0kl@gmail.com",
+    "password": "$2b$08$f2DnzR9RYrpxgalwSRzpteiLqTJKdi/7VkrkEhxCmIGRPdLXm2Isu",
     "role": "supervisor"
   },
   {
-    "id": "18",
-    "email": "supervisor97823jkl@gmail.com",
-    "password": "$2b$08$3QJEber/DQE6UBBLjO09De/Lg0MT.ro13KcJ.HgvTCOy.4.3knAc2",
+    "id": "19",
+    "email": "admincom@gmail.com",
+    "password": "$2b$08$s3FKfG2aijFp1STt/6waROLsMGbQMKKNzl6h3Hzru6XANY8NXpDym",
+    "role": "admin"
+  },
+  {
+    "id": "20",
+    "email": "admin3332ssj@gmail.com",
+    "password": "$2b$08$f.6i6JVSIpmoo/aeCouMVesZWOAvrsZMwQbecuYDsn4nmxuNiUKSG",
+    "role": "admin"
+  },
+  {
+    "id": "21",
+    "email": "supervisor123@gmail.com",
+    "password": "$2b$08$0imcHOsqeWW2P1nCsTWpnOHuUsgMzWUR1Cs1NGa.Kr.yJpXJIb8iC",
     "role": "supervisor"
+  },
+  {
+    "id": "22",
+    "email": "supervisor83s@gmail.com",
+    "password": "$2b$08$jHtBei23edYTf/QauOqIK.BCTeNPxARGiVkJkBWVDhEALc9juSP2O",
+    "role": "supervisor"
+  },
+  {
+    "id": "23",
+    "email": "user2af889760e@gmail.com",
+    "password": "$2b$08$1nruXoRX9Edxt7VTjkAC3.QZBbHpEHlTf/jq9AeX82JuysnplxGaq",
+    "role": "viewer"
+  },
+  {
+    "id": "24",
+    "email": "user288w2@gmail.com",
+    "password": "$2b$08$P6s9SrhJhINRpSl8K9DTZO3LvCnWSTo41JNICd9FGg8S0Hu3dwB5i",
+    "role": "viewer"
+  },
+  {
+    "id": "25",
+    "email": "adminrole@gmail.com",
+    "password": "$2b$08$XLCQrofv154XtPxwZiOWzu.1Vp3zQJvmh.dXpa1guT9uqXeQRk/SK",
+    "role": "admin"
+  },
+  {
+    "id": "28",
+    "email": "adminfinal@gmail.com",
+    "password": "$2b$08$oV3ItMc0DWOnmlXj9AM36u4gQGZafA2qHx20ZGEnOaCjI7/S1V4A6",
+    "role": "admin"
   }
 ]
