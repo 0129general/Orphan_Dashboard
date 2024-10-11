@@ -1,5 +1,5 @@
 // controllers/sheetController.js
-const config = require("../utils/config");
+const config = require("../config/googlesheets");
 const {
   loadSheet,
   fetchSheetData,

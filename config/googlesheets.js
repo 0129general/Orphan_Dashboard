@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 module.exports = {
   googleSheetId: "1RN32yHsBpdMmXD6P3cCT09oq-d1VsBVgCYBDlt38KFI",
   apiKey:
