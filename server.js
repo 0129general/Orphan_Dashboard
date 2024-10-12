@@ -5,7 +5,7 @@ const cors = require("cors");
 const path = require("path");
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
-const config = require("./config/googlesheets");
+const googleSheetsconfig = require("./config/googlesheets");
 // Load environment variables from .env file
 dotenv.config();
 connectDB();
