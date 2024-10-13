@@ -3,8 +3,8 @@ const router = express.Router();
 const orphanDonorController = require('../controllers/orphanDonorController');
 
 router.post('/', orphanDonorController.createOrphanDonor);
-router.get('/', orphanDonorController.getAllOrphans);
-router.get('/:id', orphanDonorController.getOrphan);
+router.get('/', orphanDonorController.getAllOrphanDonors);
+router.get('/:id', orphanDonorController.getOrphanDonor);
 router.patch('/:id', orphanDonorController.updateOrphanDonor);
 router.delete('/:id', orphanDonorController.deleteOrphanDonor);
 

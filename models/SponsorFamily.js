@@ -20,7 +20,7 @@ const sponsorFamilySchema = new Schema(
     rankBetweenBrothers: { type: Number, required: true },
     attachment: { type: String }, // Store file path
     report: { type: String },
-    orphan: { type: Schema.Types.ObjectId, ref: "Orphan" },
+    orphan: { type: Schema.Types.ObjectId, ref: "OrphanDonor" },
   },
   { timestamps: true }
 );

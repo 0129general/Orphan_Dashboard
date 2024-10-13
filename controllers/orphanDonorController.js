@@ -1,40 +1,30 @@
-const  Orphan  = require('../models/Orphan');
-const  Donor  = require('../models/Donor');
-
+const OrphanDonor = require('../models/OrphanDonor');
+const SponsorFamily = require('../models/SponsorFamily');
 
 exports.createOrphanDonor = async (req, res) => {
   try {
-    const { donorInfo, ...orphanInfo } = req.body;
-    
-    const orphan = new Orphan(orphanInfo);
-    const donor = new Donor(donorInfo);
-
-    orphan.donor = donor._id;
-    donor.orphan = orphan._id;
-
-    await orphan.save();
-    await donor.save();
-
-    res.status(201).json({ orphan, donor });
+    const orphanDonor = new OrphanDonor(req.body);
+    await orphanDonor.save();
+    res.status(201).json(orphanDonor);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-exports.getAllOrphans = async (req, res) => {
+exports.getAllOrphanDonors = async (req, res) => {
   try {
-    const orphans = await Orphan.find().populate('donor');
-    res.json(orphans);
+    const orphanDonors = await OrphanDonor.find().populate('sponsorFamily');
+    res.json(orphanDonors);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-exports.getOrphan = async (req, res) => {
+exports.getOrphanDonor = async (req, res) => {
   try {
-    const orphan = await Orphan.findById(req.params.id).populate('donor');
-    if (!orphan) return res.status(404).json({ message: 'Orphan not found' });
-    res.json(orphan);
+    const orphanDonor = await OrphanDonor.findById(req.params.id).populate('sponsorFamily');
+    if (!orphanDonor) return res.status(404).json({ message: 'Orphan-Donor not found' });
+    res.json(orphanDonor);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -42,17 +32,11 @@ exports.getOrphan = async (req, res) => {
 
 exports.updateOrphanDonor = async (req, res) => {
   try {
-    const { donorInfo, ...orphanInfo } = req.body;
-    
-    const orphan = await Orphan.findByIdAndUpdate(req.params.id, orphanInfo, { new: true });
-    if (!orphan) return res.status(404).json({ message: 'Orphan not found' });
+    const orphanDonor = await OrphanDonor.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!orphanDonor) return res.status(404).json({ message: 'Orphan-Donor not found' });
 
-    if (donorInfo && orphan.donor) {
-      await Donor.findByIdAndUpdate(orphan.donor, donorInfo);
-    }
-
-    const updatedOrphan = await Orphan.findById(req.params.id).populate('donor');
-    res.json(updatedOrphan);
+    const updatedOrphanDonor = await OrphanDonor.findById(req.params.id).populate('sponsorFamily');
+    res.json(updatedOrphanDonor);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -60,15 +44,16 @@ exports.updateOrphanDonor = async (req, res) => {
 
 exports.deleteOrphanDonor = async (req, res) => {
   try {
-    const orphan = await Orphan.findById(req.params.id);
-    if (!orphan) return res.status(404).json({ message: 'Orphan not found' });
+    const orphanDonor = await OrphanDonor.findById(req.params.id);
+    if (!orphanDonor) return res.status(404).json({ message: 'Orphan-Donor not found' });
 
-    if (orphan.donor) {
-      await Donor.findByIdAndDelete(orphan.donor);
+    // Delete associated SponsorFamily if it exists
+    if (orphanDonor.sponsorFamily) {
+      await SponsorFamily.findByIdAndDelete(orphanDonor.sponsorFamily);
     }
 
-    await Orphan.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Orphan and associated donor deleted successfully' });
+    await OrphanDonor.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Orphan-Donor and associated Sponsor Family (if any) deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
