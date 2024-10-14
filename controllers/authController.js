@@ -1,72 +1,96 @@
-const fs = require("fs");
-const path = require("path");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const usersFile = path.join(__dirname, "../users.json");
+const User = require("../models/User");
 
 // Login
-exports.login = (req, res) => {
-  const { email, password } = req.body;
-  console.log("body:", req.body);
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log("body:", req.body);
 
-  fs.readFile(usersFile, "utf-8", (err, data) => {
-    if (err) return res.status(500).json({ message: "Error reading users" });
-    const users = JSON.parse(data);
-    const user = users.find((user) => user.email === email);
+    const user = await User.findOne({ email });
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    const passwordIsValid = bcrypt.compareSync(password, user.password);
-    if (!passwordIsValid)
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (!passwordIsValid) {
       return res.status(401).json({ message: "Invalid password" });
+    }
 
     const token = jwt.sign(
-      { id: user.id, role: user.role },
+      { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       {
-        expiresIn: 86400,
+        expiresIn: "365 days",
       }
     );
-    res.status(200).json({ auth: true, token });
-  });
+
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
+
+    res.status(200).json({
+      auth: true,
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res
+      .status(500)
+      .json({ message: "Error during login", error: error.message });
+  }
 };
 
 // Register
-exports.register = (req, res) => {
-  const { email, password, role } = req.body;
-  console.log("body:", email, password);
-  fs.readFile(usersFile, "utf-8", (err, data) => {
-    if (err) return res.status(500).json({ message: "Error reading users" });
-    console.log("JsonFile:", data);
-    const users = JSON.parse(data);
-    const user = users.find((user) => user.email === email);
-    if (user)
-      return res
-        .status(404)
-        .json({ message: "The user is already registered" });
+exports.register = async (req, res) => {
+  try {
+    const { email, password, role } = req.body;
+    console.log("body:", email, password);
 
-    const hashedPassword = bcrypt.hashSync(password, 8);
-    let userId = 0;
-    if (users) {
-      userId = users[users?.length - 1].id+1;
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ message: "The user is already registered" });
     }
-    const newUser = {
-      id: userId,
+
+    const hashedPassword = await bcrypt.hash(password, 8);
+    const newUser = new User({
       email,
       password: hashedPassword,
-      role: role,
-    };
-    users.push(newUser);
-    fs.writeFile(usersFile, JSON.stringify(users, null, 2), (err) => {
-      if (err) return res.status(500).json({ message: "Error saving user" });
-      const token = jwt.sign(
-        { id: newUser.id, role: role },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: '365 days',
-        }
-      );
-      res.status(201).json({ auth: true, token });
+      role,
     });
-  });
+
+    await newUser.save();
+
+    const token = jwt.sign(
+      { id: newUser._id, role: newUser.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "365 days",
+      }
+    );
+
+    res.status(201).json({
+      auth: true,
+      token,
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        role: newUser.role,
+      },
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res
+      .status(500)
+      .json({ message: "Error during registration", error: error.message });
+  }
 };

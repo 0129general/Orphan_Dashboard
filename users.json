@@ -75,7 +75,7 @@
     "id": "20",
     "email": "admin3332ssj@gmail.com",
     "password": "$2b$08$f.6i6JVSIpmoo/aeCouMVesZWOAvrsZMwQbecuYDsn4nmxuNiUKSG",
-    "role": "admin"
+    "role": "Oadmin"
   },
   {
     "id": "21",
@@ -87,30 +87,30 @@
     "id": "22",
     "email": "supervisor83s@gmail.com",
     "password": "$2b$08$jHtBei23edYTf/QauOqIK.BCTeNPxARGiVkJkBWVDhEALc9juSP2O",
-    "role": "supervisor"
+    "role": "Osupervisor"
   },
   {
     "id": "23",
     "email": "user2af889760e@gmail.com",
     "password": "$2b$08$1nruXoRX9Edxt7VTjkAC3.QZBbHpEHlTf/jq9AeX82JuysnplxGaq",
-    "role": "viewer"
+    "role": "Ouser"
   },
   {
     "id": "24",
     "email": "user288w2@gmail.com",
     "password": "$2b$08$P6s9SrhJhINRpSl8K9DTZO3LvCnWSTo41JNICd9FGg8S0Hu3dwB5i",
-    "role": "viewer"
+    "role": "Oviewer"
   },
   {
     "id": "25",
     "email": "adminrole@gmail.com",
     "password": "$2b$08$XLCQrofv154XtPxwZiOWzu.1Vp3zQJvmh.dXpa1guT9uqXeQRk/SK",
-    "role": "admin"
+    "role": "Oadmin"
   },
   {
     "id": "28",
     "email": "adminfinal@gmail.com",
     "password": "$2b$08$oV3ItMc0DWOnmlXj9AM36u4gQGZafA2qHx20ZGEnOaCjI7/S1V4A6",
-    "role": "admin"
+    "role": "Ouser"
   }
 ]
