@@ -6,7 +6,6 @@ const orphanSchema = new Schema(
   {
     active: { type: Boolean, default: true },
     withoutFather: { type: Boolean, required: true },
-    serialNumber: { type: String, unique: true, required: true },
     arabicName: { type: String, required: true },
     englishName: { type: String, required: true },
     sponsorStatus: {
