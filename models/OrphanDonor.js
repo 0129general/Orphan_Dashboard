@@ -57,7 +57,23 @@ const orphanDonorSchema = new Schema(
     nationality: { type: String, required: true },
     address: { type: String },
     notes: { type: String },
-    sponsorFamily: { type: Schema.Types.ObjectId, ref: "SponsorFamily" },
+    // Orphan Family Information
+    parentsName: { type: String, required: true },
+    relationType: {
+      type: String,
+      enum: ["Father", "Mother", "Guardian"],
+      required: true,
+    },
+    residencyType: {
+      type: String,
+      enum: ["Own", "Rent", "Other"],
+      required: true,
+    },
+    brothersCount: { type: Number, required: true },
+    sistersCount: { type: Number, required: true },
+    rankBetweenBrothers: { type: Number, required: true },
+    attachment: { type: String }, // Store file path
+    report: { type: String },
   },
   { timestamps: true }
 );

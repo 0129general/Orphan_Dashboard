@@ -1,21 +1,45 @@
+const formidable = require("formidable");
+const fs = require("fs");
+const path = require("path");
 const OrphanDonor = require("../models/OrphanDonor");
-const SponsorFamily = require("../models/SponsorFamily");
 
 exports.createOrphanDonor = async (req, res) => {
-  try {
-    const orphanDonor = new OrphanDonor(req.body);
-    console.log("orphanDonor:", orphanDonor);
-    await orphanDonor.save();
-    res.status(201).json(orphanDonor);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
+  const form = new formidable.IncomingForm();
+  form.uploadDir = path.join(__dirname, "../uploads");
+  form.keepExtensions = true;
+
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      return res.status(400).json({ message: "Error parsing form data" });
+    }
+
+    try {
+      const processedFields = Object.keys(fields).reduce((acc, key) => {
+        acc[key] = Array.isArray(fields[key]) ? fields[key][0] : fields[key];
+        return acc;
+      }, {});
+
+      const orphanDonor = new OrphanDonor({
+        ...processedFields,
+        attachment: files.attachment ? files.attachment[0].filepath : undefined,
+      });
+
+      await orphanDonor.save();
+      res.status(201).json(orphanDonor);
+    } catch (error) {
+      if (files.attachment && files.attachment[0].filepath) {
+        fs.unlink(files.attachment[0].filepath, (unlinkError) => {
+          if (unlinkError) console.error("Error deleting file:", unlinkError);
+        });
+      }
+      res.status(400).json({ message: error.message });
+    }
+  });
 };
 
 exports.getAllOrphanDonors = async (req, res) => {
   try {
-    const orphanDonors = await OrphanDonor.find().populate("sponsorFamily");
-    console.log("orphanDonors:", orphanDonors);
+    const orphanDonors = await OrphanDonor.find();
     res.json(orphanDonors);
   } catch (error) {
     console.log("error:", error.message);
@@ -25,9 +49,7 @@ exports.getAllOrphanDonors = async (req, res) => {
 
 exports.getOrphanDonor = async (req, res) => {
   try {
-    const orphanDonor = await OrphanDonor.findById(req.params.id).populate(
-      "sponsorFamily"
-    );
+    const orphanDonor = await OrphanDonor.findById(req.params.id);
     if (!orphanDonor)
       return res.status(404).json({ message: "Orphan-Donor not found" });
     res.json(orphanDonor);
@@ -37,25 +59,48 @@ exports.getOrphanDonor = async (req, res) => {
 };
 
 exports.updateOrphanDonor = async (req, res) => {
-  try {
-    console.log("id:", req.params.id);
-    console.log("body:", req.body);
-    const orphanDonor = await OrphanDonor.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!orphanDonor)
-      return res.status(404).json({ message: "Orphan-Donor not found" });
+  const form = new formidable.IncomingForm();
+  form.uploadDir = path.join(__dirname, "../uploads");
+  form.keepExtensions = true;
 
-    const updatedOrphanDonor = await OrphanDonor.findById(
-      req.params.id
-    ).populate("sponsorFamily");
-    console.log("updatedOrphanDonor:", updatedOrphanDonor);
-    res.json(updatedOrphanDonor);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      return res.status(400).json({ message: "Error parsing form data" });
+    }
+
+    try {
+      const orphanDonor = await OrphanDonor.findById(req.params.id);
+      if (!orphanDonor)
+        return res.status(404).json({ message: "Orphan-Donor not found" });
+
+      if (files.attachment && files.attachment[0].filepath) {
+        if (orphanDonor.attachment) {
+          fs.unlink(orphanDonor.attachment, (unlinkError) => {
+            if (unlinkError)
+              console.error("Error deleting old file:", unlinkError);
+          });
+        }
+        orphanDonor.attachment = files.attachment[0].filepath;
+      }
+
+      const processedFields = Object.keys(fields).reduce((acc, key) => {
+        acc[key] = Array.isArray(fields[key]) ? fields[key][0] : fields[key];
+        return acc;
+      }, {});
+
+      Object.assign(orphanDonor, processedFields);
+
+      await orphanDonor.save();
+      res.json(orphanDonor);
+    } catch (error) {
+      if (files.attachment && files.attachment[0].filepath) {
+        fs.unlink(files.attachment[0].filepath, (unlinkError) => {
+          if (unlinkError) console.error("Error deleting file:", unlinkError);
+        });
+      }
+      res.status(400).json({ message: error.message });
+    }
+  });
 };
 
 exports.deleteOrphanDonor = async (req, res) => {
@@ -64,17 +109,30 @@ exports.deleteOrphanDonor = async (req, res) => {
     if (!orphanDonor)
       return res.status(404).json({ message: "Orphan-Donor not found" });
 
-    // Delete associated SponsorFamily if it exists
-    if (orphanDonor.sponsorFamily) {
-      await SponsorFamily.findByIdAndDelete(orphanDonor.sponsorFamily);
+    if (orphanDonor.attachment) {
+      fs.unlink(orphanDonor.attachment, (unlinkError) => {
+        if (unlinkError)
+          console.error("Error deleting attachment:", unlinkError);
+      });
     }
 
     await OrphanDonor.findByIdAndDelete(req.params.id);
     res.json({
       data: req.params.id,
-      message:
-        "Orphan-Donor and associated Sponsor Family (if any) deleted successfully",
+      message: "Orphan-Donor deleted successfully",
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getAttachment = async (req, res) => {
+  try {
+    const orphanDonor = await OrphanDonor.findById(req.params.id);
+    if (!orphanDonor || !orphanDonor.attachment) {
+      return res.status(404).json({ message: "Attachment not found" });
+    }
+    res.sendFile(path.resolve(orphanDonor.attachment));
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
