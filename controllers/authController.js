@@ -6,7 +6,7 @@ const User = require("../models/User");
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("body:", req.body);
+    // console.log("body:", req.body);
 
     const user = await User.findOne({ email });
 
@@ -52,7 +52,7 @@ exports.login = async (req, res) => {
 exports.register = async (req, res) => {
   try {
     const { email, password, role } = req.body;
-    console.log("body:", email, password);
+    // console.log("body:", email, password);
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {

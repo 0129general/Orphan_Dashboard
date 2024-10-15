@@ -16,11 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 // file upload
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// // Connect to MongoDB
-// mongoose.connect('your_mongodb_connection_string', { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => console.log('Connected to MongoDB'))
-//   .catch(err => console.error('MongoDB connection error:', err));
-
 // require('dotenv').config();
 const sheetRoutes = require("./routes/sheetRoutes");
 const authRoutes = require("./routes/authRoutes");

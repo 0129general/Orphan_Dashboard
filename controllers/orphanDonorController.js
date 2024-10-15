@@ -42,7 +42,7 @@ exports.getAllOrphanDonors = async (req, res) => {
     const orphanDonors = await OrphanDonor.find();
     res.json(orphanDonors);
   } catch (error) {
-    console.log("error:", error.message);
+    // console.log("error:", error.message);
     res.status(500).json({ message: error.message });
   }
 };

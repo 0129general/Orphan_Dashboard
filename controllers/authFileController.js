@@ -7,7 +7,7 @@ const usersFile = path.join(__dirname, "../users.json");
 // Login
 exports.login = (req, res) => {
   const { email, password } = req.body;
-  console.log("body:", req.body);
+  // console.log("body:", req.body);
 
   fs.readFile(usersFile, "utf-8", (err, data) => {
     if (err) return res.status(500).json({ message: "Error reading users" });
@@ -34,10 +34,10 @@ exports.login = (req, res) => {
 // Register
 exports.register = (req, res) => {
   const { email, password, role } = req.body;
-  console.log("body:", email, password);
+  // console.log("body:", email, password);
   fs.readFile(usersFile, "utf-8", (err, data) => {
     if (err) return res.status(500).json({ message: "Error reading users" });
-    console.log("JsonFile:", data);
+    // console.log("JsonFile:", data);
     const users = JSON.parse(data);
     const user = users.find((user) => user.email === email);
     if (user)

@@ -16,10 +16,10 @@ exports.getAllUsers = (req, res) => {
 // Add a new user
 exports.addUser = (req, res) => {
   const { email, password, role } = req.body;
-  console.log("body:", email, password);
+  // console.log("body:", email, password);
   fs.readFile(usersFile, "utf-8", (err, data) => {
     if (err) return res.status(500).json({ message: "Error reading users" });
-    console.log("JsonFile:", data);
+    // console.log("JsonFile:", data);
     const users = JSON.parse(data);
     const user = users.find((user) => user.email === email);
     if (user)
@@ -62,19 +62,19 @@ exports.updateUser = (req, res) => {
   const userId = req.params.id;
   const updatedData = req.body;
 
-  console.log("userId:", userId, updatedData);
+  // console.log("userId:", userId, updatedData);
   fs.readFile(usersFile, "utf-8", (err, data) => {
     if (err) return res.status(500).json({ message: "Error reading users" });
     let users = JSON.parse(data);
-    console.log("updateUsers:", users);
+    // console.log("updateUsers:", users);
     const userIndex = users.findIndex((user) => user.id == userId);
-    console.log("userIndex:", userIndex);
+    // console.log("userIndex:", userIndex);
     if (userIndex === -1)
       return res.status(404).json({ message: "User not found" });
     if (updatedData?.password) {
       const hashedPassword = bcrypt.hashSync(updatedData.password, 8);
       updatedData.password = hashedPassword;
-      console.log("hash:", updatedData.password);
+      // console.log("hash:", updatedData.password);
     }
     users[userIndex] = { ...users[userIndex], ...updatedData };
 
@@ -103,9 +103,9 @@ exports.deleteUser = (req, res) => {
   fs.readFile(usersFile, "utf-8", (err, data) => {
     if (err) return res.status(500).json({ message: "Error reading users" });
     let users = JSON.parse(data);
-    console.log("users:", users);
+    // console.log("users:", users);
     updatedusers = users.filter((user) => user.id != userId);
-    console.log("deleteUser:", userId, updatedusers);
+    // console.log("deleteUser:", userId, updatedusers);
 
     fs.writeFile(usersFile, JSON.stringify(updatedusers, null, 2), (err) => {
       if (err) return res.status(500).json({ message: "Error deleting user" });
