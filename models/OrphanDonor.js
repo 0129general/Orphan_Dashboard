@@ -8,7 +8,7 @@ const orphanDonorSchema = new Schema(
     mobileNumber: { type: Number, required: true },
     duration: {
       type: String,
-      enum: ["1 month", "3 months", "6 months", "1 year"],
+      // enum: ["1 month", "3 months", "6 months", "1 year"],
       required: true,
     },
     startingFrom: { type: Date, required: true },
@@ -21,12 +21,12 @@ const orphanDonorSchema = new Schema(
     englishName: { type: String, required: true },
     sponsorStatus: {
       type: String,
-      enum: ["Sponsored", "Not Sponsored", "Pending"],
+      // enum: ["Sponsored", "Not Sponsored", "Pending"],
       required: true,
     },
     sponsorType: {
       type: String,
-      enum: ["Individual", "Organization", "Anonymous"],
+      // enum: ["Individual", "Organization", "Anonymous"],
       required: true,
     },
     supervisedBy: { type: String, required: true },
@@ -34,19 +34,23 @@ const orphanDonorSchema = new Schema(
     birthDate: { type: Date, required: true },
     healthStatus: {
       type: String,
-      enum: ["Healthy", "Chronic Illness", "Disability"],
+      // enum: ["Healthy", "Chronic Illness", "Disability"],
       required: true,
     },
-    gender: { type: String, enum: ["Male", "Female"], required: true },
+    gender: {
+      type: String,
+      // enum: ["Male", "Female"],
+      required: true,
+    },
     commitment: {
       type: String,
-      enum: ["High", "Medium", "Low"],
+      // enum: ["High", "Medium", "Low"],
       required: true,
     },
     verses: { type: Number },
     orphanBy: {
       type: String,
-      enum: ["Father", "Mother", "Both"],
+      // enum: ["Father", "Mother", "Both"],
       required: true,
     },
     parentsDeathDate: { type: Date },
@@ -61,11 +65,11 @@ const orphanDonorSchema = new Schema(
     parentsName: { type: String },
     relationType: {
       type: String,
-      enum: ["Father", "Mother", "Guardian"],
+      // enum: ["Father", "Mother", "Guardian"],
     },
     residencyType: {
       type: String,
-      enum: ["Own", "Rent", "Other"],
+      // enum: ["Own", "Rent", "Other"],
     },
     brothersCount: { type: Number },
     sistersCount: { type: Number },
